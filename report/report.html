@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Field Study Report — Final International University website</title>
+<style>
+  @page { size: A4; margin: 16mm 16mm 15mm 16mm; }
+  body { font-family: "Segoe UI", Arial, sans-serif; font-size: 10pt; line-height: 1.38; color: #1a1a1a; }
+  h1 { font-size: 17pt; margin: 0 0 2mm; color: #9b1c1c; }
+  h2 { font-size: 12.5pt; margin: 5mm 0 2mm; padding-bottom: 1mm; border-bottom: 2px solid #c53030; color: #222; }
+  h3 { font-size: 10.5pt; margin: 3mm 0 1mm; }
+  p { margin: 0 0 2mm; }
+  .meta { width: 100%; border-collapse: collapse; margin: 2mm 0 3mm; font-size: 9.5pt; }
+  .meta td { padding: 1mm 2mm; border: 1px solid #ccc; }
+  .meta td:first-child { background: #f3f3f3; font-weight: 600; width: 32%; }
+  table.t { width: 100%; border-collapse: collapse; margin: 1mm 0 2.5mm; font-size: 8.8pt; }
+  table.t th, table.t td { border: 1px solid #bbb; padding: 0.8mm 1.5mm; text-align: left; vertical-align: top; }
+  table.t th { background: #eee; }
+  .ok { color: #1b6e2d; font-weight: 600; } .bad { color: #b42318; font-weight: 600; } .part { color: #9a6700; font-weight: 600; }
+  .ev { color: #555; font-weight: 600; white-space: nowrap; }
+  .rec { border: 1px solid #ddd; border-left: 4px solid #c53030; padding: 2mm 3mm; margin: 0 0 2.5mm; break-inside: avoid; }
+  .rec p { margin: 0 0 1mm; }
+  .small { font-size: 8.8pt; color: #444; }
+  .figs { display: flex; gap: 3mm; margin: 2mm 0; break-inside: avoid; }
+  .figs figure { margin: 0; flex: 1; }
+  .figs img { width: 100%; border: 1px solid #ccc; }
+  .figs figcaption { font-size: 8pt; color: #444; }
+  .appendix { break-before: page; }
+  code { font-family: Consolas, monospace; font-size: 8.8pt; background: #f4f4f4; padding: 0 0.6mm; }
+</style>
+</head>
+<body>
+
+<h1>Website Field Study — Final International University</h1>
+<table class="meta">
+  <tr><td>Site audited</td><td>https://www.final.edu.tr (home page, contact page <code>/ufu-iletisim</code>, search page)</td></tr>
+  <tr><td>Organisation</td><td>Final International University (Uluslararası Final Üniversitesi), Girne, North Cyprus</td></tr>
+  <tr><td>Student</td><td>Abdalla Ali — 2103060186 · SFWE475 / CPRG201, Assignment 2</td></tr>
+  <tr><td>Audit date and browser</td><td>10 November 2026, 08:11–08:33 (local time) · Google Chrome 157.0.8103.39, desktop, Windows 11, fresh browser profile</td></tr>
+</table>
+<p class="small">Every screenshot shows the address bar and has a capture time printed under it. Evidence IDs in brackets point to files in <code>evidence/</code>; the full list is in the appendix. I only browsed like a normal visitor: no logins, no scanners, no hidden pages, and no form was sent.</p>
+
+<h2>Part A — Under the hood</h2>
+
+<p><b>A1 HTTPS and redirects.</b> Typing <code>http://final.edu.tr</code> ended on <code>https://www.final.edu.tr</code>, so the site forces a secure connection and adds “www” automatically. DevTools’ Security panel reports “This page is secure (valid HTTPS)”, TLS 1.3, and “all resources served securely”, so there is no mixed content. One honest limit: on my laptop the certificate issuer shows as “Bitdefender Personal CA”, because my antivirus inspects HTTPS traffic, so I could not see the university’s public certificate authority from this machine. A small weakness: some menu links are still written as <code>http://</code> (for example the Webmail link and the “Neden UFÜ” page) and only work because of the redirect. <span class="ev">[A1]</span></p>
+
+<p><b>A2 URL structure.</b> Five page addresses scored against the five Week 5 rules:</p>
+<table class="t">
+  <tr><th>URL</th><th>HTTPS</th><th>Short &amp; readable</th><th>Lowercase</th><th>Hyphens</th><th>Few params</th></tr>
+  <tr><td>/ufu-iletisim</td><td class="ok">Pass</td><td class="ok">Pass</td><td class="ok">Pass</td><td class="ok">Pass</td><td class="ok">Pass</td></tr>
+  <tr><td>/m-11-ogrenciler/a-367-akademik-takvim</td><td class="ok">Pass</td><td class="part">Partly — internal codes “m-11”, “a-367”</td><td class="ok">Pass</td><td class="ok">Pass</td><td class="ok">Pass</td></tr>
+  <tr><td>/ufu-7-akademik/o-4-enstituler/f-6-lisansustu-egitim-ogretim-enstitusu-leoe</td><td class="ok">Pass</td><td class="bad">Fail — 75 characters, three coded levels</td><td class="ok">Pass</td><td class="ok">Pass</td><td class="ok">Pass</td></tr>
+  <tr><td>/search?q=zzzqqq</td><td class="ok">Pass</td><td class="ok">Pass</td><td class="ok">Pass</td><td class="ok">Pass</td><td class="ok">Pass (1)</td></tr>
+  <tr><td>aday.final.edu.tr/yataygecisTC</td><td class="ok">Pass</td><td class="part">Partly</td><td class="bad">Fail — “TC”</td><td class="bad">Fail — words joined</td><td class="ok">Pass</td></tr>
+</table>
+<p>The site uses HTTPS and hyphens well, and news pages have readable slugs (<code>n-1714-bilim-ve-uluslararasi-…</code>). The weak point is the number codes from the content system (<code>m-11</code>, <code>a-367</code>, <code>f-6</code>), which mean nothing to a visitor and make addresses long. Image file names also contain square brackets, e.g. <code>slider-2jpg[1788954786].jpg</code>, which must be encoded in links. <span class="ev">[A2]</span></p>
+
+<p><b>A3 One request, closely.</b> The main document request is <code>GET</code>, status <code>200 OK</code>, <code>Content-Type: text/html; charset=UTF-8</code>, compressed with Brotli and served through Cloudflare. With the cache disabled, the home page made <b>64 requests</b> and transferred <b>24.0 MB</b> (finish 9.61 s on my fast connection; the HTML itself was ready at 1.20 s). Sorting by size shows why: two news photos are <b>7.79 MB</b> and <b>7.49 MB</b>, about 64% of the whole page, yet both are 6000×4000-pixel camera photos shown at only 104×75 pixels (<code>width:104px; height:75px</code> in the source) — full-size photos used as tiny thumbnails. The one Fetch/XHR request is a <code>POST</code> to Google Analytics (<code>…/g/collect</code>, status 204 No Content); the page also loads Google Tag Manager, Google Ads and two Facebook Pixels. <span class="ev">[A3]</span></p>
+
+<p><b>A4 A page that does not exist.</b> <code>/no-such-page-123</code> answers <code>302</code> and redirects to <code>/404</code>, which answers <code>200 OK</code> with an empty page. This is a soft 404, and a bad one: the visitor sees a completely white screen with no logo, no menu, no message and no way back except the Back button. Because the final status is 200, search engines may also treat broken links as real pages. <span class="ev">[A4]</span></p>
+
+<p><b>A5 Caching.</b> The HTML document sends <code>Cache-Control: no-store, no-cache, must-revalidate</code> (plus <code>Pragma: no-cache</code> and an <code>Expires</code> date in 1981): the browser must never keep a copy and downloads the page fresh on every visit (Cloudflare marks it <code>DYNAMIC</code>). The 7.79 MB news image sends <code>Cache-Control: max-age=14400</code>: the browser may reuse it for 4 hours without asking again. Because image names already contain a version number, they could safely be cached much longer (for example a year), so returning visitors would not download the same megabytes again. <span class="ev">[A5]</span></p>
+
+<p><b>A6 Where the page is built.</b> In the raw source (Ctrl+U) the menu, the “HABERLER VE DUYURULAR” heading, every news headline and its date are already present as plain HTML. The Elements panel shows the same structure; JavaScript (jQuery) only adds the image slider and the lightbox. So the page is <b>server-rendered</b> — a classic multi-page site where the server builds each page. This is good for speed of first text and for search engines. I also noticed the <code>&lt;title&gt;</code> tag is placed inside <code>&lt;body&gt;</code> instead of <code>&lt;head&gt;</code>. <span class="ev">[A6]</span></p>
+
+<p><b>A7 SEO basics.</b> Checked in the DevTools Console on the home page:</p>
+<table class="t">
+  <tr><th>Item</th><th>Found</th><th>Comment</th></tr>
+  <tr><td>Page title</td><td class="part">Yes</td><td>“Uluslararası Final Üniversitesi” — the same title also appears on the contact and search pages, so tabs and search results all look alike.</td></tr>
+  <tr><td>Meta description</td><td class="part">Yes, weak</td><td>Only repeats the name; gives Google nothing to show about programmes or admissions.</td></tr>
+  <tr><td>Canonical link</td><td class="bad">Missing</td><td>Both <code>final.edu.tr</code> and <code>/home</code> show the home page; no canonical tells Google which is the main one.</td></tr>
+  <tr><td>lang attribute</td><td class="bad">Missing</td><td><code>&lt;html class="no-js"&gt;</code> — screen readers cannot know the page is Turkish.</td></tr>
+  <tr><td>h1 count</td><td class="bad">0</td><td>No main heading on the page.</td></tr>
+  <tr><td>rel="sponsored"/"ugc"</td><td>0</td><td>Not needed — no adverts or user comments on the page.</td></tr>
+</table>
+<p class="small">[A7]</p>
+
+<h2>Part B — The experience</h2>
+
+<p><b>B1 Loading state.</b> Chrome 157 no longer offers “Slow 3G”, so I used its slowest preset, “3G”, with the cache disabled. At 2 s the old page stays on screen with only the tab spinner moving. At 8 s the new page appears, but text is in a fallback serif font and menu icons are missing. At 20 s the layout is usable, with icon boxes still empty. At 60 s the page was <i>still loading</i> (17.1 MB received, finish 1.1 min) — mostly the two huge news photos. The site shows no spinner or placeholders of its own, but because it is server-rendered the text arrives early, which is the best part of this experience. <span class="ev">[B1]</span></p>
+
+<p><b>B2 Empty state.</b> Searching for “zzzqqq” shows the heading “Arama Sonuçları”, an empty search box, and the single word “Sonuç” (“Result”) — nothing else. There is no “no results found” message, no suggestion, and the typed word has been cleared from the box, so the visitor cannot even see what they searched for. <span class="ev">[B2]</span></p>
+
+<p><b>B3 Error state.</b> With the network set to Offline, clicking “İLETİŞİM” showed Chrome’s own “No internet / ERR_INTERNET_DISCONNECTED” page. The site itself says nothing and offers no retry; the visitor depends on the browser’s message. For a traditional site this is normal and less urgent than the other findings. <span class="ev">[B3]</span></p>
+
+<p><b>B4 Form validation.</b> The contact form (name, e-mail, subject, message, reCAPTCHA) was <b>not tested safely</b>: its fields have no <code>required</code> attribute and the page has no checking script, so pressing “Gönder” would really send the request to the server even when empty. I therefore tested the search form: pressing “Ara!” with an empty box does nothing at all. The page’s <code>regOnay()</code> function silently refuses anything shorter than 3 letters, with no message, so the visitor cannot tell why nothing happened. Errors appear nowhere. <span class="ev">[B4, B5]</span></p>
+
+<p><b>B5 Labels.</b> Each contact field has visible text beside it, but none is tied to its field:</p>
+<table class="t">
+  <tr><th>Field</th><th>Visible label</th><th>Tied to field</th><th>Click on label moves cursor?</th><th>Note</th></tr>
+  <tr><td>İsim (Zorunlu)</td><td class="ok">Yes</td><td class="bad">No</td><td class="bad">No (focus stays on page)</td><td rowspan="4">All four fields share <code>id="names"</code>; all labels point to <code>for="example-text-input"</code> (a template leftover). “(Zorunlu)” is text only. E-mail is <code>type="text"</code>, not <code>type="email"</code>. No placeholders.</td></tr>
+  <tr><td>E-Posta (Zorunlu)</td><td class="ok">Yes</td><td class="bad">No</td><td class="bad">No</td></tr>
+  <tr><td>Konu (Zorunlu)</td><td class="ok">Yes</td><td class="bad">No</td><td class="bad">No</td></tr>
+  <tr><td>Mesaj</td><td class="ok">Yes</td><td class="bad">No</td><td class="bad">No</td></tr>
+</table>
+<p class="small">[B5]</p>
+
+<p><b>B6 Keyboard only.</b> Task: find the contact phone number. From the home page: <b>17 Tab presses</b> to reach “İLETİŞİM”, Enter, then <b>26 more Tabs</b> to reach “+90 392 650 6666” — 43 Tabs and 1 Enter. The order is logical (top bar, header, main menu) and there is no trap. Problems: there is <b>no “skip to content” link</b>; the dropdown menus <b>HAKKIMIZDA, AKADEMİK, ÖĞRENCİLER and KAMPÜS VE SERVİSLER and the search icon are skipped completely</b>, so a keyboard user cannot open them at all; the slider’s Previous/Next links take focus with <b>no visible outline</b>; and on the contact page 10 presses go into the embedded Google Map with no outline on the page. Ordinary links show Chrome’s default focus ring. <span class="ev">[B6]</span></p>
+
+<p><b>B7 Automated audit.</b> Lighthouse 12.8.2, Accessibility category: <b>home page 63/100</b>, <b>contact page 65/100</b>. Top three issues — home: links with no name (35 links, mostly news image links), images without <code>alt</code> (10, e.g. social icons and the logo), and <code>&lt;html&gt;</code> without <code>lang</code>. Contact: form fields without labels (4), links with no name (6), images without <code>alt</code> (3). These match my manual findings in A7, B5 and B6. <span class="ev">[B7]</span></p>
+
+<p><b>B8 Link and button text.</b></p>
+<table class="t">
+  <tr><th>Current text</th><th>Where</th><th>Better text</th></tr>
+  <tr><td>“DEVAMI”</td><td>After each news summary</td><td>“Haberin devamı: ISRIS Kongresi” (read the full story + its topic)</td></tr>
+  <tr><td>“DEVAMI”</td><td>Button under the photo gallery</td><td>“Tüm fotoğrafları gör” (See all photos)</td></tr>
+  <tr><td>(house icon only, no name)</td><td>Main menu</td><td>Accessible name “Ana sayfa” (Home page)</td></tr>
+  <tr><td>(magnifier icon only, no name)</td><td>Header search</td><td>A real button named “Sitede ara” (Search the site)</td></tr>
+  <tr><td>“Tr” / “En”</td><td>Language switch</td><td>“Türkçe” / “English”</td></tr>
+</table>
+<p class="small">The mobile menu button also has no name (suggest “Menüyü aç”). [B8]</p>
+
+<div class="figs">
+  <figure><img src="../evidence/A3-big-images.png" alt="Network panel sorted by size showing two news photos of 7.49 MB and 7.79 MB"><figcaption>[A3] Two news photos, 7.5–7.8 MB each</figcaption></figure>
+  <figure><img src="../evidence/A4-missing-page.png" alt="Blank white page shown for a missing address"><figcaption>[A4] A missing page is a blank screen</figcaption></figure>
+  <figure><img src="../evidence/B5-labels-and-required.png" alt="Console table showing all contact fields share one id and no label is tied to its field"><figcaption>[B5] No contact label is tied to its field</figcaption></figure>
+</div>
+
+<h2>Part C — Recommendations</h2>
+<h3>What works well</h3>
+<p>1. <b>Secure by default.</b> Every visit is moved to HTTPS, the connection uses TLS 1.3, and all resources load securely [A1].
+2. <b>Content arrives as real HTML.</b> Because the server builds the page, the text was readable within about 8 s even on a 3G connection, and search engines can read every news headline [A6, B1].</p>
+
+<h3>Three problems to fix first</h3>
+<p class="small">Order: problem 1 slows <i>every</i> visitor on <i>every</i> visit; problem 2 completely blocks some visitors from parts of the site; problem 3 hurts fewer visits but leaves people stuck with no help.</p>
+
+<div class="rec">
+<p><b>1. The home page is 24 MB because of oversized photos.</b> Evidence: A3, A6, B1, A5.</p>
+<p><b>Who it affects:</b> all visitors, most of all prospective students abroad on mobile data or slow Wi-Fi. <b>Fix:</b> resize news thumbnails to the size they are shown (about 200 px wide, roughly 20 KB each), compress slider images, load below-the-fold images only when scrolled to, and let browsers cache images for longer. <b>Effort:</b> low. <b>Impact:</b> high.</p>
+</div>
+<div class="rec">
+<p><b>2. Keyboard and screen-reader users are blocked from menus and the contact form.</b> Evidence: B5, B6, B7, B8, A7.</p>
+<p><b>Who it affects:</b> people who cannot use a mouse, blind visitors using screen readers, and anyone using voice control. <b>Fix:</b> give each form field its own id and tie the label to it; add <code>lang="tr"</code>; make the dropdown menus open with the keyboard; add a “skip to content” link; give icon links and images a name/alt text. <b>Effort:</b> medium. <b>Impact:</b> high.</p>
+</div>
+<div class="rec">
+<p><b>3. Dead ends with no message.</b> Evidence: A4, B2, B4.</p>
+<p><b>Who it affects:</b> anyone following an old link, searching for something not on the site, or typing a short search word. <b>Fix:</b> a real “page not found” page with the menu and a search box (and status 404); a “no results — try another word” message that keeps the search word; and visible messages on the search and contact forms instead of silent failure. <b>Effort:</b> low–medium. <b>Impact:</b> medium.</p>
+</div>
+
+<div class="appendix">
+<h2>Appendix A — Evidence log</h2>
+<p class="small">Browser: Google Chrome 157.0.8103.39 (fresh profile, DevTools docked right). All captures on 10 November 2026, local time. Every image has the capture time printed in a strip under the window.</p>
+<table class="t">
+  <tr><th>ID</th><th>File</th><th>What it shows</th><th>Time</th><th>Page address</th></tr>
+  <tr><td>A1</td><td>A1-redirect.png</td><td>Typed http://final.edu.tr, landed on https://www.final.edu.tr</td><td>08:11</td><td>https://www.final.edu.tr</td></tr>
+  <tr><td>A1</td><td>A1-certificate.png</td><td>Security panel: valid HTTPS, TLS 1.3, all resources secure</td><td>08:20</td><td>https://www.final.edu.tr</td></tr>
+  <tr><td>A2</td><td>A2-long-url.png</td><td>Example of a long, coded URL</td><td>08:20</td><td>/ufu-7-akademik/o-4-enstituler/f-6-…</td></tr>
+  <tr><td>A3</td><td>A3-network.png</td><td>Network summary: 64 requests, 24.0 MB, finish 9.61 s</td><td>08:17</td><td>https://www.final.edu.tr</td></tr>
+  <tr><td>A3</td><td>A3-big-images.png</td><td>Sorted by size: 7.79 MB and 7.49 MB news photos</td><td>08:18</td><td>https://www.final.edu.tr</td></tr>
+  <tr><td>A3</td><td>A3-document-headers.png</td><td>Document: GET, 200 OK, text/html</td><td>08:18</td><td>https://www.final.edu.tr</td></tr>
+  <tr><td>A3</td><td>A3-fetch-xhr.png</td><td>Fetch/XHR: POST to Google Analytics, 204</td><td>08:18</td><td>https://www.final.edu.tr</td></tr>
+  <tr><td>A4</td><td>A4-missing-page.png</td><td>Blank white page for a missing address</td><td>08:12</td><td>/no-such-page-123 → /404</td></tr>
+  <tr><td>A4</td><td>A4-status-codes.png</td><td>302 → /404 → 200 in the Network panel</td><td>08:19</td><td>/no-such-page-123</td></tr>
+  <tr><td>A5</td><td>A5-cache-document.png</td><td>Document Cache-Control: no-store, no-cache, must-revalidate</td><td>08:18</td><td>https://www.final.edu.tr</td></tr>
+  <tr><td>A5</td><td>A5-cache-image.png</td><td>Image Cache-Control: max-age=14400, 7.78 MB</td><td>08:18</td><td>/images/haber/img-6169jpg[…].jpg</td></tr>
+  <tr><td>A6</td><td>A6-source.png</td><td>Raw HTML already contains news headlines and dates</td><td>08:15</td><td>view-source:https://www.final.edu.tr</td></tr>
+  <tr><td>A6</td><td>A6-elements.png</td><td>Elements panel; html has no lang; title inside body</td><td>08:14</td><td>https://www.final.edu.tr</td></tr>
+  <tr><td>A7</td><td>A7-seo-check.png</td><td>Console table: title, description, canonical, lang, h1</td><td>08:19</td><td>https://www.final.edu.tr</td></tr>
+  <tr><td>B1</td><td>B1-3g-01-at-2s.png … B1-3g-04-at-60s.png</td><td>Home page loading under “3G” at 2, 8, 20 and 60 s</td><td>08:23–08:24</td><td>https://www.final.edu.tr</td></tr>
+  <tr><td>B2</td><td>B2-empty-search.png</td><td>Search “zzzqqq”: only the word “Sonuç”</td><td>08:24</td><td>/search?q=zzzqqq</td></tr>
+  <tr><td>B3</td><td>B3-offline.png</td><td>Offline: Chrome’s own no-internet page</td><td>08:25</td><td>/ufu-iletisim</td></tr>
+  <tr><td>B4</td><td>B4-empty-search-submit.png</td><td>Empty search submitted: nothing happens, no message</td><td>08:27</td><td>/search?q=zzzqqq</td></tr>
+  <tr><td>B4/B5</td><td>B5-labels-and-required.png</td><td>Contact fields: same id, labels not tied, none required; label click leaves focus on page</td><td>08:26</td><td>/ufu-iletisim</td></tr>
+  <tr><td>B6</td><td>B6-keyboard-17-tabs-to-contact.png</td><td>Focus on “İLETİŞİM” after 17 Tabs</td><td>08:32</td><td>https://www.final.edu.tr</td></tr>
+  <tr><td>B6</td><td>B6-keyboard-26-tabs-to-phone.png</td><td>Focus on the phone number after 26 more Tabs</td><td>08:33</td><td>/ufu-iletisim</td></tr>
+  <tr><td>B7</td><td>B7-lighthouse-home.png / .html</td><td>Lighthouse Accessibility 63</td><td>08:30</td><td>https://www.final.edu.tr</td></tr>
+  <tr><td>B7</td><td>B7-lighthouse-contact.png / .html</td><td>Lighthouse Accessibility 65</td><td>08:30</td><td>/ufu-iletisim</td></tr>
+  <tr><td>B8</td><td>B8-vague-links.png</td><td>Console table of “DEVAMI”, “Tr/En” and unnamed links</td><td>08:33</td><td>https://www.final.edu.tr</td></tr>
+</table>
+</div>
+</body>
+</html>

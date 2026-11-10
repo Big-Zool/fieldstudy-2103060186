@@ -3,7 +3,7 @@
 Browser: Google Chrome 157.0.8103.39, desktop, Windows 11, fresh profile, DevTools docked right.
 All captures on **10 November 2026**, local time. Each image has its capture time printed in a strip under the window.
 
-| ID | File | What it shows | Time | Page address |
+| ID | File | What it shows | Time and date (10 Nov 2026) | Page address |
 |---|---|---|---|---|
 | A1 | evidence/A1-redirect.png | Typed http://final.edu.tr, landed on https://www.final.edu.tr | 08:11 | https://www.final.edu.tr |
 | A1 | evidence/A1-certificate.png | Security panel: valid HTTPS, TLS 1.3, all resources secure | 08:20 | https://www.final.edu.tr |

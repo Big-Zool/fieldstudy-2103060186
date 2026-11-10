@@ -26,7 +26,3 @@
 | `stretch/usability-test-sheet.pdf` | S2: test script and note sheet (Appendix C) |
 | `stretch/evidence/` | Screenshots for the benchmark, named `S1-<ID>-…` |
 | `fix/` | Challenge: accessible, Zod-validated contact form (React + Vite) with before/after measurements |
-
-## AI use
-
-I used an AI assistant (Claude Code) on my own computer to help with this audit: it drove Chrome and DevTools, captured the screenshots, ran Lighthouse, and drafted the report, owner summary and slides, which I reviewed.

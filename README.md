@@ -25,4 +25,4 @@
 
 ## AI use
 
-I used an AI assistant (Claude Code) on my own computer to help with this audit: it drove Chrome and DevTools, captured the screenshots, ran Lighthouse, and drafted the report, owner summary and slides, which I reviewed. I have discussed this use with my instructor.
+I used an AI assistant (Claude Code) on my own computer to help with this audit: it drove Chrome and DevTools, captured the screenshots, ran Lighthouse, and drafted the report, owner summary and slides, which I reviewed.

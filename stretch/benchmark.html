@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>S1 Benchmark — final.edu.tr vs emu.edu.tr</title>
+<style>
+  @page { size: A4; margin: 15mm 16mm; }
+  body { font-family: "Segoe UI", Arial, sans-serif; font-size: 10pt; line-height: 1.4; color: #1a1a1a; }
+  h1 { font-size: 16pt; margin: 0 0 1mm; color: #9b1c1c; }
+  h2 { font-size: 12pt; margin: 5mm 0 2mm; border-bottom: 2px solid #c53030; padding-bottom: 1mm; }
+  p { margin: 0 0 2mm; }
+  .small { font-size: 8.8pt; color: #444; }
+  table { width: 100%; border-collapse: collapse; font-size: 9pt; margin: 2mm 0; }
+  th, td { border: 1px solid #bbb; padding: 1.2mm 1.8mm; text-align: left; vertical-align: top; }
+  th { background: #eee; }
+  .win { color: #1b6e2d; font-weight: 600; }
+</style>
+</head>
+<body>
+<h1>Stretch S1 — Benchmark against a second site</h1>
+<p class="small">Audited site: https://www.final.edu.tr (Final International University). Comparison site: https://emu.edu.tr (Eastern Mediterranean University) — another university in North Cyprus with the same purpose: programmes, admissions, news and contact for students. Both checked on 10 November 2026 with the same browser (Chrome 157, fresh profile, cache disabled) and the same method as the Core audit. Comparison evidence is in <code>stretch/evidence/</code>, named <code>S1-&lt;checklist ID&gt;-…</code>.</p>
+
+<h2>Six checks repeated on both sites</h2>
+<table>
+  <tr><th>Check</th><th>final.edu.tr</th><th>emu.edu.tr</th><th>Better</th></tr>
+  <tr><td>A1 HTTPS and redirects</td><td>http:// → https://www.final.edu.tr [A1]</td><td>http:// → https://emu.edu.tr/en [S1-A1]</td><td>Equal</td></tr>
+  <tr><td>A3 Home page weight</td><td>64 requests, <b>24.0 MB</b>; two 7.5–7.8 MB photos shown at 104×75 px; text ready at 1.2 s [A3]</td><td>90 requests, <b>16.9 MB</b>; 10.7 MB of it is a background video; text ready at 1.8 s [S1-A3]</td><td class="win">EMU (lighter, but its video is also heavy)</td></tr>
+  <tr><td>A4 Missing page</td><td>302 → /404 → <b>200</b>, completely blank page [A4]</td><td><b>404</b> status with “404 Page Not Found — The page you requested was not found.” but no menu or links [S1-A4]</td><td class="win">EMU</td></tr>
+  <tr><td>A7 SEO basics</td><td>Description only repeats the name; no canonical; no lang; 0 h1 [A7]</td><td>Real description; canonical present (points to new.emu.edu.tr); lang="en"; 1 h1 [S1-A7]</td><td class="win">EMU</td></tr>
+  <tr><td>B2 Empty search (“zzzqqq”)</td><td>Only the word “Sonuç”; search box emptied [B2]</td><td>Search word kept in the box and in the tab title, but the message says “Something went wrong, noted ;)” [S1-B2]</td><td class="win">EMU, partly — its wording is confusing</td></tr>
+  <tr><td>B7 Lighthouse accessibility (home, mobile mode)</td><td><b>63</b> — unnamed links (35), images without alt (10), no lang [B7]</td><td><b>89</b> — images without alt (3), one colour-contrast issue [S1-B7]</td><td class="win">EMU</td></tr>
+</table>
+
+<h2>What final.edu.tr could learn from emu.edu.tr</h2>
+<p>1. EMU shows that the basics search engines and screen readers need — a real description, a language tag and one main heading — are small additions to a page template; together with alt text and named links they are why EMU scores 89 against Final’s 63.</p>
+<p>2. A missing page should answer with a real 404 status and at least a sentence of explanation, as EMU does; Final can go one step further by adding its menu and search box, which neither site has today.</p>
+<p>3. An empty search should keep the visitor’s word and give a clear next step: EMU already keeps the word, and a plain “No results for ‘zzzqqq’ — try a shorter word” would beat both sites.</p>
+</body>
+</html>
